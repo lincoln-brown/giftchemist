@@ -1,0 +1,63 @@
+body {
+    padding-top: 5rem;
+}
+div.block{
+	width: 500px;
+	height: 650px;
+	border:1px solid black;
+	border-radius: 15px;
+}
+div.upper{
+	width: 498px;
+	height: 325px;
+	background-color:#29DB53;
+	border-radius: 15px 15px 0px 0px;
+	text-align: center;
+}
+div.lower{
+	width: 500px;
+	height: 325px;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+}
+div.feed{
+	display: flex;
+	flex-direction: row;
+	position: relative;
+	left: 110px;
+	
+}
+div.widgets{
+
+	width: 90px;
+	height: 80px;
+	border:0px solid black;
+}
+button#btn{
+	width: 150px;
+	height: 50px;
+	background-color: #5AD746;
+	color :white;
+	border-radius: 8px;
+	position: relative;
+	left:170px;
+	top:30px;
+}
+p{
+	color: gray;
+}
+div.profilepic{
+	position: relative;
+	left: 160px;
+	top:5px;
+	width: 180px;
+	height: 180px;
+	border:1px solid black;
+	border-radius: 50%;
+	background-color: white;
+}
+img.pfp{
+	width: 170px;
+	height: 170px;
+}

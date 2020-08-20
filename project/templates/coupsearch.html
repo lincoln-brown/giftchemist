@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block css %} 
+<style>
+div.profilepic{
+    margin-left: 40%;
+    margin-top: 5%;
+	width: 200px;
+	height: 200px;
+	}
+img.pfp{
+	width: 190px;
+	height: 190px;
+}
+div.lable{
+    margin-left: 25%;
+    margin-top: 1%;
+}
+div.coupons{
+
+	border: 1px solid black;
+	margin-top: 5em;
+	min-height: 10em;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+
+}
+div.couponblock{
+	border: 1px solid black;
+	border-top: 5px solid rgb(62, 121, 209);
+	border-radius: 15px;
+	min-height: 10em;
+	display: flex;
+	width: 80%;
+	padding: 1em;
+	margin: 1em;
+}
+img.redemedstatus{
+	width: 100px;
+}
+span.infolabel{
+	font-size: x-large;
+	color: black;
+	font-weight: 200;
+}
+span.info{
+	color: rgb(73, 73, 73);
+	font-size: large;
+}
+div.couponinfobox{
+	margin-left: 2em;
+}
+
+
+</style>
+
+{% endblock%}
+
+{% block main %}
+<div>
+	<div class="profilepic"> 
+        <img class="pfp" src="{{url_for('static',filename='icons/gift.png')}}"> 
+    </div>
+    <div class="lable">
+        <h4>Please Enter the coupon code you would like to verify </h4>
+	</div>
+	<form  method="post">
+		{{ coupon.csrf_token }}
+		<div class="form-group">
+		  <h4>{{ coupon.CouponCode.label }}</h4>
+		  {{ coupon.CouponCode(class='form-control', placeholder="Enter Coupon Code ") }}
+		</div>
+		
+		<button type="submit" name="submit" class="btn btn-primary float-right">Search</button>
+	  </form>
+	  <div class="coupons">
+		  {%if coupons%}
+		  {%for coupon in coupons %}
+		  {%if coupon.Redemed == "false"%}
+		  <div class="couponblock">
+			  <div class="redemedstatusbox"> 
+				<img class="redemedstatus" src="{{url_for('static',filename='icons/valid.png')}}">
+			  </div>
+
+			  <div class="couponinfobox">
+				<label> <span class="infolabel">Coupon Code:</span> <span class="info">{{coupon.CoupId}} </span></label>
+				<label> <span class="infolabel">Creation Date:</span> <span class="info"> {{coupon.Creation_date}}</span></label>
+				<label> <span class="infolabel">Expiration Date:</span><span class="info">{{coupon.Expiration_date}} </span></label>
+				<label> <span class="infolabel">Value:</span> <span class="info">${{coupon.Value}} </span></label>
+				<label> <span class="infolabel">Redemed:</span> <span class="info">{{coupon.Redemed}} </span></label>
+
+			  </div>
+			  <form action="{{url_for('Redeem',couponId=coupon.CoupId)}}" method="GET"> 
+				  <button class="btn btn-warning">Redeem</button></form>
+			</div>
+		{%else%}
+		<div class="couponblock">
+			<div class="redemedstatusbox"> 
+			  <img class="redemedstatus" src="{{url_for('static',filename='icons/notvalid.png')}}">
+			</div>
+
+			<div class="couponinfobox">
+			  <label> <span class="infolabel">Coupon Code:</span> <span class="info">{{coupon.CoupId}} </span></label>
+			  <label> <span class="infolabel">Creation Date:</span> <span class="info"> {{coupon.Creation_date}}</span></label>
+			  <label> <span class="infolabel">Expiration Date:</span><span class="info">{{coupon.Expiration_date}} </span></label>
+			  <label> <span class="infolabel">Value:</span> <span class="info">{{coupon.Value}} </span></label>
+			  <label> <span class="infolabel">Redemed:</span> <span class="info">{{coupon.Redemed}} </span></label>
+
+			</div>
+		  </div>
+		{%endif%}
+		  {%endfor%}
+
+
+		{%endif %}
+	  </div>
+
+</div>
+
+{% endblock%}
