@@ -1,6 +1,60 @@
 {% extends "base.html" %}
 
+{% block css %}
+<style>
+img.pfp{
+	width: 190px;
+	height: 190px;
+}
+
+div.profilepic{
+  margin-left: 40%;
+  margin-top: 10em;
+	width: 200px;
+	height: 200px;
+	}
+  div.lable{
+    margin-left: 35%;
+    margin-top: 1%;
+}
+
+</style>
+{%endblock%}
+
 {% block main %}
-<h1>About</h1>
-<p>This webpage will generates coupons, save them to the database and print them or save them as pdf to be printed at a later date.</p>
+
+<div>
+  
+  <div class="profilepic"> 
+    <img class="pfp" src="{{url_for('static',filename='icons/create.png')}}"> 
+</div>
+<div class="lable">
+    <h4>Please Enter batch details </h4>
+</div>
+
+
+
+
+<form action="{{url_for('NewCoupons')}}" method="POST">
+    {{ coupon.csrf_token }}
+    <div class="form-group">
+      {{ coupon.Value.label }}
+      {{ coupon.Value(class='form-control', placeholder="Enter the value of the Coupon") }}
+    </div>
+    <div class="form-group">
+      {{ coupon.Expiration_date.label }}
+      {{ coupon.Expiration_date(class='form-control') }}
+    </div>
+    <div class="form-group">
+        {{ coupon.Quantity.label }}
+        {{ coupon.Quantity(class='form-control', placeholder="Enter the amount of coupon you would like to generate. " ) }}
+    </div>
+    
+    <button type="submit" name="submit" class="btn btn-primary btn-block">Generate</button>
+  </form>
+</div>
+
+    
+</form>
+
 {% endblock %}

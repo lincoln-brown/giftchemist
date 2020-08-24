@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block css %}
+<style>
+    div.coupon{
+        width: 20em;
+        height: 10em;
+        border: 1px solid black;
+    }
+    img.coup{
+        width:20em ;
+        height: 10em;
+    }
+    div.page{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    div.value{
+        
+        position: relative;
+        width: 3em;
+        height: 2em;
+        left:12em;
+        bottom: 4em;
+
+    }
+    div.CouponCode{
+        
+        position: relative;
+        width: 1em;
+        height: 1em;
+        left:13.9em;
+        bottom: 4.2em;
+        
+}
+div.expdate{
+    
+        position: relative;
+        width: 4em;
+        height: 1em;
+        left:8em;
+        bottom: 3.3em;
+
+
+}
+h6.CouponCodelabel{
+    font-size: xx-small;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+}
+h6.valuelabel{
+    font-size: x-large;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    color: rgb(24, 86, 219);
+
+
+}
+h6.expdatelabel{
+    font-size:x-small;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    
+}
+
+</style>
+  
+{%endblock%}
+
+{% block main %}
+
+{%if batch%}
+<div class="page" id="print">
+    
+
+{% for coupon in batch%}
+<div class="coupon" >
+    
+    <img class="coup" src="{{url_for('static',filename='icons/coupon1.png')}}">
+    
+    <div class="value">
+        <h6 class="valuelabel">${{coupon.Value}}</h6>
+
+    </div>
+    <div class="expdate">
+        <h6 class="expdatelabel">{{coupon.Expiration_date}}</h6>
+
+    </div>
+
+    <div class="CouponCode">
+        <h6 class="CouponCodelabel">{{coupon.Code}}</h6>
+
+    </div>
+    
+</div>
+
+
+
+{%endfor%}
+
+</div>
+<form action="{{url_for('AddNewCoupons')}}" method="POST">
+
+    <button type="submit" name="submit" class="btn btn-primary mt-3 ">Commit and Save</button>
+</form>
+
+
+{%endif%}
+
+{% endblock %}
+
+{% block js %}
+
+{% endblock%}

@@ -4,13 +4,14 @@ Jinja2 Documentation:    http://jinja.pocoo.org/2/documentation/
 Werkzeug Documentation:  http://werkzeug.pocoo.org/documentation/
 This file creates your application.
 """
-import datetime 
+import datetime
 from hashlib import sha256
-
+import json
+from flask_weasyprint import HTML, render_pdf
 from project import app,login_manager
-from project.forms import LoginForm,CoupSearchForm
+from project.forms import LoginForm,CoupSearchForm,MakeCoupon,NewUserForm
 from project.models import UserProfile
-from flask import render_template, request, redirect, url_for, flash,session
+from flask import render_template, request, redirect, url_for, flash,session, make_response
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import check_password_hash, generate_password_hash
 from project.database import *
@@ -20,7 +21,6 @@ from project.database import *
 ###
 # Routing for your application.
 ###
-
 
 @app.route('/',methods=["GET","POST"])
 def home():
@@ -39,7 +39,7 @@ def home():
             session['UserID']=user['UserId']
             login_user(realuser)
 
-            print("yes")
+            #print("yes")
             return redirect(url_for('coupsearch'))
 
 
@@ -78,13 +78,82 @@ def Redeem(couponId):
     print(r)
     return redirect(url_for('coupsearch'))
 
-@app.route('/newcoupon')
+@app.route('/newcoupon',methods=["GET","Post"])
 @login_required
 def NewCoupons():
-    """Render the website's about page."""
-    return render_template('NewCoupons.html')
+    makecoupon=MakeCoupon()
+    if request.method == "POST" and makecoupon.validate_on_submit():
+            Value = makecoupon.Value.data
+            Expiration_date = makecoupon.Expiration_date.data
+            Quantity = makecoupon.Quantity.data
+            
+            return redirect(url_for('GenCoupons',Value=Value,Expiration_date=Expiration_date,Quantity=Quantity))
+        
+    
+    return render_template('NewCoupons.html',coupon=makecoupon)
 
 
+@app.route('/addnewcoupon/<Value>/<Expiration_date>/<Quantity>',methods=["GET","Post"])
+@login_required
+def GenCoupons(Value,Expiration_date,Quantity):
+    lastcode=LastCouponcode()
+    Creation_date=str(datetime.date.today())
+    coupon_batch=[]
+    for i in range(int(Quantity)):
+        lastcode=lastcode+1
+        Code="CUID"+str(lastcode)
+
+        coupon={"Value":Value,
+                "Expiration_date":Expiration_date,
+                "Code":Code,
+                "Creation_date":Creation_date,
+        }
+        
+        coupon_batch.append(coupon)
+        print("bricks ",coupon_batch)
+        session['couponbatch']=coupon_batch
+    
+    
+    return render_template("Gencoupons.html", batch=coupon_batch)
+
+@app.route('/addnewcoupon',methods=["GET","Post"])
+@login_required
+def AddNewCoupons():
+    batch =session.get('couponbatch')
+    print("yes aye", batch)
+    for coupon in batch:
+        done=addcoupon(coupon)
+    if done=="True":
+        html = render_template("couponpdfprint.html", batch=batch)
+        pdf=render_pdf(HTML(string=html))
+        response=make_response(pdf)
+        response.headers['Content-Type']="application/pdf"
+        response.headers['Content-Disposition']= 'attachment;  filename=Coupon_output.pdf'
+        return response
+    elif done=="Duplicate_entry":
+        message=" Hmm, It looks like you tried committing the coupon data more than once, Yeah, Um Dont do that!!! "
+        return render_template('Error.html',Message=message)
+    else:
+        message=" An error occured while trying to write to the database"
+        return render_template('Error.html',Message=message), 404
+
+
+@app.route('/adduser', methods=['GET','POST'])
+def adduser():
+    newuser=NewUserForm()
+    if request.method=='POST' and NewUserForm.validate_on_submit:
+        First_Name=newuser.First_Name.data
+        Last_Name=newuser.Last_Name.data
+        Username=newuser.Username.data
+        Password=newuser.Password.data
+        VPassword=newuser.VPassword.data
+        print(First_Name,Last_Name,Username,Password,VPassword)
+    
+    return render_template("newuser.html", form=newuser)
+
+    
+    
+   
 
 @login_manager.user_loader
 def load_user(username):
