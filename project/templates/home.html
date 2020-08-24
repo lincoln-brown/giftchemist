@@ -25,6 +25,7 @@ div.loginlable{
 {% endblock%}
 
 {% block main %}
+{% include 'flash_messages.html' %}
 <div >
     <div class="profilepic"> 
         <img class="pfp" src="{{url_for('static',filename='icons/gift.png')}}"> 

@@ -47,6 +47,16 @@ def LastCouponcode():
         return int(CoupId['count(CoupId)'])
     except Exception as e:
         print("Error Unable to fetch last Coupon ID.", e)
+def NextUserid():
+    try:
+        cur = connect_cursor_db()
+        query='select count(UserId) from Users'
+        cur.execute(query)
+        UserId = cur.fetchone()
+       ## print(int(CoupId['count(CoupId)']))
+        return "UID"+ str(int(UserId['count(UserId)'])+1)
+    except Exception as e:
+        print("Error Unable to fetch next User ID.", e)
 
 
 def addcoupon(coupon):
@@ -64,7 +74,14 @@ def addcoupon(coupon):
          return False
 
 
-
+def addnewuser(User):
+      try:
+        cur = connect_cursor_db()
+        cur.callproc( "Adduser",(User["First_Name"],User["Last_Name"],User["UserId"],User["Username"],User["Password"]))
+        results =cur.fetchone()
+        return results
+      except Exception as e:
+        print("Error, Unable to Add New user at this time.", e)
     
 
 

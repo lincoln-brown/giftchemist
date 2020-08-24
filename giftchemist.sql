@@ -57,3 +57,22 @@ begin
 end //
 
 DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE Adduser(in Fname Varchar(30),Lname Varchar(30),
+	UserId Varchar(25),
+	Username Varchar(30),
+	Password Varchar(100)
+	)
+
+begin
+	insert into Users  values(UserId,Fname,Lname);
+	insert into Access values(UserId,Username,Password,"true");
+	
+	select "User added Successfully";
+	COMMIT;
+
+end //
+
+DELIMITER ;

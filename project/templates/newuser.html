@@ -23,6 +23,8 @@ div.profilepic{
 
 {% block main %}
 
+{% include 'flash_messages.html' %}
+
 <div>
   
   <div class="profilepic"> 
@@ -39,7 +41,7 @@ div.profilepic{
     {{ form.csrf_token }}
     <div class="form-group">
       {{ form.First_Name.label }}
-      {{ form.First_Name(class='form-control', placeholder="Enter Your User Name plaes ") }}
+      {{ form.First_Name(class='form-control', placeholder="Enter Your First Name please ") }}
     </div>
     <div class="form-group">
       {{ form.Last_Name.label }}
@@ -51,7 +53,7 @@ div.profilepic{
     </div>
     <div class="form-group">
         {{ form.Password.label }}
-        {{ form.Password(class='form-control', placeholder="Enter your password please." ) }}
+        {{ form.Password(class='form-control', placeholder="Enter your password please.(must be greater than 7 Charaters)" ) }}
     </div>
     <div class="form-group">
         {{ form.VPassword.label }}

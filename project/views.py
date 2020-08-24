@@ -60,11 +60,16 @@ def logout():
 def coupsearch():
     search=CoupSearchForm()
     if request.method == "POST" and search.validate_on_submit():
-        print(search.CouponCode.data)
+        
         couponcode=search.CouponCode.data
         coupons=findcoupon(couponcode)
         print(coupons)
-        return render_template('coupsearch.html',coupon=search,coupons=coupons)
+        if len(coupons)==0:
+            flash('Sorry, No coupons found for that Coupon Code .', 'warning')
+            return render_template('coupsearch.html',coupon=search)
+        else:
+            return render_template('coupsearch.html',coupon=search,coupons=coupons)
+
 
 	
     return render_template('coupsearch.html',coupon=search)
@@ -75,8 +80,14 @@ def Redeem(couponId):
     Userid=session.get('UserID')
     
     r=redeemcoupon(Userid,couponId)
-    print(r)
-    return redirect(url_for('coupsearch'))
+    if r =={'Coupon Redemed Successfully': 'Coupon Redemed Successfully'}:
+        print(r)
+        flash('Coupon redeemed succesfully.', 'success')
+        return redirect(url_for('coupsearch'))
+    else:
+        flash('A problem occured while trying to redeem a coupon.Please try again later', 'danger')
+        return redirect(url_for('coupsearch'))
+            
 
 @app.route('/newcoupon',methods=["GET","Post"])
 @login_required
@@ -139,6 +150,7 @@ def AddNewCoupons():
 
 
 @app.route('/adduser', methods=['GET','POST'])
+@login_required
 def adduser():
     newuser=NewUserForm()
     if request.method=='POST' and NewUserForm.validate_on_submit:
@@ -147,8 +159,24 @@ def adduser():
         Username=newuser.Username.data
         Password=newuser.Password.data
         VPassword=newuser.VPassword.data
-        print(First_Name,Last_Name,Username,Password,VPassword)
-    
+        if Password==VPassword and len(Password)>=8:
+            Hashed_Password=sha256(Password.encode('utf-8')).hexdigest()
+            UserId=NextUserid()
+            print(First_Name,Last_Name,Username,Password,VPassword,NextUserid())
+            newuser={"First_Name":First_Name,
+            "Last_Name":Last_Name,
+            "Username":Username,
+            "Password":Hashed_Password,
+            "UserId":UserId
+             }
+            addnewuser(newuser)
+            flash('User Created succesfully.', 'success')
+            return redirect(url_for('coupsearch'))
+        else:
+            flash('Passwords do not match required Constraits, Please try again.', 'danger')
+            return redirect(url_for('adduser'))
+
+
     return render_template("newuser.html", form=newuser)
 
     
