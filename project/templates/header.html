@@ -10,26 +10,35 @@
     <ul class="navbar-nav ml-auto p-2">
       {% if current_user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('coupsearch') }}">Home</a>
+        <a id="headertag" style ="font-size:larger"class="nav-link" href="{{ url_for('coupsearch') }}">Home</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('adduser') }}">Add user</a>
+        <a id="headertag" class="nav-link" style ="font-size:larger" href="{{ url_for('adduser') }}">Add user</a>
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('NewCoupons') }}">New Coupons </a>
+        <a id="headertag" class="nav-link" style ="font-size:larger" href="{{ url_for('NewCoupons') }}">New Coupons </a>
       </li>
       
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        <a id="headertag" class="nav-link" style ="font-size:larger" href="{{ url_for('logout') }}">Logout</a>
       </li>
 
       {% else %}
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home') }}">Login</a>
+        <a id="headertag" class="nav-link" style ="font-size:larger" href="{{ url_for('home') }}">Login</a>
       </li>
       {% endif %}
+      {% block css %}
+    <style>
+
+      a#headertag{
+
+        font-size: large;
+      }
+    </style>    
+      {% endblock%}
     </ul>    
   </div>
 </nav>
