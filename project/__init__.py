@@ -22,8 +22,8 @@ else:
 app.config['SECRET_KEY'] = 'testgZvTtlPtjGRqeMBaLji3HxoKB5EZCsNL'
 
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'DEVELOPER'
-app.config['MYSQL_PASSWORD'] = '@Links1010'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'GIFTCHEMIST'
 app.config['MYSQL_CURSORCLASS']="DictCursor"
 

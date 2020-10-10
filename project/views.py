@@ -7,7 +7,8 @@ This file creates your application.
 import datetime
 from hashlib import sha256
 import json
-from flask_weasyprint import HTML, render_pdf
+import pdfkit
+#from flask_weasyprint import HTML, render_pdf
 from project import app,login_manager
 from project.forms import LoginForm,CoupSearchForm,MakeCoupon,NewUserForm
 from project.models import UserProfile
@@ -135,8 +136,18 @@ def AddNewCoupons():
     for coupon in batch:
         done=addcoupon(coupon)
     if done=="True":
-        html = render_template("couponpdfprint.html", batch=batch)
-        pdf=render_pdf(HTML(string=html))
+        #html = render_template("couponpdfprint.html", batch=batch)
+        html = render_template("hello.html",batch=batch)
+        path_wkhtmltopdf=r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+        config = pdfkit.configuration(wkhtmltopdf=path_wkhtmltopdf)
+        options = {
+            "enable-local-file-access":"",
+            "page-size": 'Letter',
+            "margin-bottom":"0mm",
+            "outline":''
+            } 
+        pdf=pdfkit.from_string(html, False,configuration=config, options=options) 
+        
         response=make_response(pdf)
         response.headers['Content-Type']="application/pdf"
         response.headers['Content-Disposition']= 'attachment;  filename=Coupon_output.pdf'
